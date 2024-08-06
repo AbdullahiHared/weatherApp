@@ -6,12 +6,23 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<form id="weatherForm">
-    <label for="locationInput">
-        <input type="text" id="locationInput" placeholder="Enter city name">
-    </label>
-    <button type="submit" id="weatherBtn" class="getWeather">Get Weather</button>
-</form>
+<div class="side">
+    <form id="weatherForm">
+        <label for="locationInput">
+            <input type="text" id="locationInput" placeholder="Enter city name ">
+        </label>
+        <button type="submit" id="weatherBtn" class="getWeather">Get Weather</button>
+    </form>
+
+    <div class="currentTemp"></div>
+    <div class="daysForecast">
+    </div>
+</div>
+
+<div class="currentCity"></div>
+<div class="weatherContainer">
+    <div class="todaysWeather"></div>
+</div>
 <script src="app.js"></script>
 </body>
 </html>
