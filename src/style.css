@@ -8,7 +8,37 @@ body {
     color: black;
 }
 
+
+.weatherContainer {
+    grid-column: 2 / 3;
+    grid-row: 1 / 3;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0;
+    height: 14%;
+    overflow-x: hidden;
+    border-bottom: 1px solid white;
+}
+
+.todaysWeather {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+    gap: 10px;
+    padding: 10px;
+    overflow-x: hidden;
+    color: white;
+}
+
+.todaysWeather > * {
+    border: 1px solid #fff; /* Adjust the color and width as needed */
+    padding: 10px;
+    border-radius: 10px;
+}
 header {
+    grid-column: 1 / 3;
+    grid-row: 1 / 2;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -25,6 +55,11 @@ header {
     align-items: flex-end;
     align-content: flex-end;
     height: 100vh;
+}
+
+.infoArea {
+    grid-column: 2 / 3;
+    grid-row: 1 m/ 2;
 }
 
 .getWeather {
@@ -60,6 +95,14 @@ input {
     transition: border-color 0.3s ease;
 }
 
+
+main {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-template-rows: 1fr 3fr;
+    height: 100vh;
+}
+
 input::placeholder {
     color: white;
 }
@@ -89,7 +132,9 @@ input {
 }
 
 .side {
-    display: flex;
+
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;

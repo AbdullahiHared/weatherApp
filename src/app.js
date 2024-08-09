@@ -118,12 +118,12 @@ function createDayElements(data) {
 
         const conditionInfo = document.createElement('p');
         conditionInfo.textContent = day.conditions;
-        dayInfo.appendChild(dateText);
         dayInfo.appendChild(conditionInfo);
+        dayInfo.appendChild(dateText);
 
         const conditionImg = document.createElement('img');
         conditionImg.classList.add('condition');
-        getGif(day.conditions, conditionImg);
+        getIcon(day.conditions, conditionImg);
         console.log(day.conditions);
         currentCondition.appendChild(conditionImg);
 
@@ -146,33 +146,65 @@ function createDayElements(data) {
         daysForecastContainer.appendChild(dayElement);
     });
 }
+
+// Function to display the hourly forecast data
 function createTimeElements(data) {
     const todaysWeatherContainer = document.querySelector('.todaysWeather');
+
+    // Check if the weather container exists
     if (!todaysWeatherContainer) {
         console.error('Today\'s weather container not found.');
         return;
     }
 
-    todaysWeatherContainer.innerHTML = ''; // Clear previous forecast
+    // Clear previous forecast
+    todaysWeatherContainer.innerHTML = '';
 
+    // Check if data is structured correctly
+    if (!data.days || !data.days[0] || !Array.isArray(data.days[0].hours)) {
+        console.error('Invalid data structure:', data);
+        return;
+    }
+
+    // Iterate through the hours data
     data.days[0].hours.forEach(hour => {
+        // Create a new div element for each hour
         const hourElement = document.createElement('div');
         hourElement.classList.add('hour');
 
-        const dateTime = document.createElement('p');
-        dateTime.classList.add('hour-time');
-        dateTime.textContent = new Date(hour.datetime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        // Create and set up the condition image
+        const conditionImg = document.createElement('img');
+        conditionImg.classList.add('condition');
+        getIcon(hour.conditions, conditionImg); // Ensure getIcon function is defined elsewhere
 
+        // Create and set up the hour time element
+        const hourTime = document.createElement('p');
+        hourTime.classList.add('hour-time');
+
+        // Ensure hour.datetime exists
+        if (hour.datetime) {
+             console.log(hour.datetime.split('T')[1].split(':')[0] + 'h');
+            hourTime.textContent = hour.datetime;
+        } else {
+            console.warn('Hour time not found for hour:', hour);
+            hourTime.textContent = 'Unknown Time';
+        }
+
+        // Create and set up the temperature element
         const temp = document.createElement('p');
         temp.classList.add('hour-temp');
         temp.textContent = `${hour.temp}°C`;
 
-        hourElement.appendChild(dateTime);
+        // Append elements to the hour container
+        hourElement.appendChild(conditionImg);
+        hourElement.appendChild(hourTime);
         hourElement.appendChild(temp);
 
+        // Append the hour container to the weather container
         todaysWeatherContainer.appendChild(hourElement);
     });
 }
+
 
 // Function to retrieve current city
 function getCurrentCity(data) {
@@ -237,7 +269,7 @@ function getIcon(condition, img) {
             img.src = 'assets/fog.svg';
             break;
         default:
-            img.src = 'assets/sunny.svg'; // Default to sunny if condition is unknown
+            img.src = 'assets/rainy.svg';
             console.warn(`Unhandled weather condition: ${condition}`);
             break;
     }
@@ -254,5 +286,4 @@ async  function getGif(condition, img) {
         console.log('status' + request.status)
     }
 }
-
 
