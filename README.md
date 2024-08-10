@@ -30,7 +30,7 @@ Technologies Used
 
 Responsive Design
 
-The application is designed to work across all devices:
+The application is designed to work across all devices (working on design for mobile and tablet):
 
     Desktop: Full view with weather details neatly laid out.
     Tablet: Adjusted layout with some elements stacked for better readability.
