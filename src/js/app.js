@@ -1,3 +1,5 @@
+// src/js/app.js
+
 // Function to load data from the given URL
 async function loadData(url) {
     try {
@@ -74,10 +76,14 @@ function getDayName(dateString) {
 }
 
 function displayData(data) {
-    if (!data) return;
+    if (!data) {
+        alert('No data to display.');
+        return;
+    };
     getCurrentCity(data);
     createDayElements(data);
-    createTimeElements(data);
+    createTimeElements(data)
+    informAboutWeather(data);
 
     const currentTemp = document.querySelector('.currentTemp');
     if (currentTemp) {
@@ -118,15 +124,14 @@ function createDayElements(data) {
 
         const conditionInfo = document.createElement('p');
         conditionInfo.textContent = day.conditions;
-        dayInfo.appendChild(conditionInfo);
-        dayInfo.appendChild(dateText);
+        dayInfo.appendChild(dateText); // Append date first
+        dayInfo.appendChild(conditionInfo); // Append description second
 
         const conditionImg = document.createElement('img');
         conditionImg.classList.add('condition');
         getIcon(day.conditions, conditionImg);
         console.log(day.conditions);
         currentCondition.appendChild(conditionImg);
-
 
         const temp = document.createElement('div');
         temp.classList.add('temp');
@@ -136,8 +141,6 @@ function createDayElements(data) {
         minTemp.textContent = `${day.tempmin}°`;
         temp.appendChild(maxTemp);
         temp.appendChild(minTemp);
-
-        dayInfo.appendChild(dateText);
 
         dayElement.appendChild(currentCondition);
         dayElement.appendChild(dayInfo);
@@ -183,7 +186,6 @@ function createTimeElements(data) {
 
         // Ensure hour.datetime exists
         if (hour.datetime) {
-             console.log(hour.datetime.split('T')[1].split(':')[0] + 'h');
             hourTime.textContent = hour.datetime;
         } else {
             console.warn('Hour time not found for hour:', hour);
@@ -196,8 +198,8 @@ function createTimeElements(data) {
         temp.textContent = `${hour.temp}°C`;
 
         // Append elements to the hour container
-        hourElement.appendChild(conditionImg);
         hourElement.appendChild(hourTime);
+        hourElement.appendChild(conditionImg);
         hourElement.appendChild(temp);
 
         // Append the hour container to the weather container
@@ -205,12 +207,11 @@ function createTimeElements(data) {
     });
 }
 
-
 // Function to retrieve current city
 function getCurrentCity(data) {
     const cityName = document.querySelector('.currentCity');
     if (cityName) {
-        cityName.textContent = data.address;
+        cityName.textContent = data.address.toUpperCase();
     } else {
         console.error('Current city element not found.');
     }
@@ -275,8 +276,7 @@ function getIcon(condition, img) {
     }
 }
 
-
-async  function getGif(condition, img) {
+async function getGif(condition, img) {
     try {
         const response = await fetch(`https://api.giphy.com/v1/gifs/translate?api_key=hlffvLB88mltPEeZlVynq25EmLU1dSLv&s=${condition}`, { mode: 'cors' });
         const data = await response.json();
@@ -287,3 +287,48 @@ async  function getGif(condition, img) {
     }
 }
 
+function informAboutWeather(data) {
+    const infoArea = document.querySelector('.infoArea');
+    const weatherContainer = document.querySelector('.weatherContainer');
+    const currentCity = document.querySelector('.currentCity');
+    weatherContainer.style.borderTop = '1px solid #fff';
+    if (!infoArea) {
+        console.error('Info area not found.');
+        return;
+    }
+
+    // Clear previous elements to avoid duplication
+    infoArea.innerHTML = '';
+
+    // fetch the current city
+    currentCity.textContent = data.address.toUpperCase();
+
+    // Create and append humidity elements
+    const humidity = document.createElement('p');
+    humidity.textContent = ` ${data.currentConditions.humidity}%`;
+
+    const humidityImg = document.createElement('img');
+    humidityImg.src = 'assets/humidity.svg';
+
+    const humidityContainer = document.createElement('div');
+    humidityContainer.classList.add('humidityContainer');
+    humidityContainer.appendChild(humidityImg);
+    humidityContainer.appendChild(humidity); // Append the humidity text inside the container
+
+    // Create and append wind elements
+    const wind = document.createElement('p');
+    wind.textContent = ` ${data.currentConditions.windspeed} m/s`;
+
+    const windImg = document.createElement('img');
+    windImg.src = 'assets/windSpeed.svg';
+
+    const windContainer = document.createElement('div');
+    windContainer.classList.add('windContainer');
+    windContainer.appendChild(windImg);
+    windContainer.appendChild(wind); // Append the wind text inside the container
+
+    // Append containers to the infoArea
+    infoArea.appendChild(currentCity);
+    infoArea.appendChild(windContainer);
+    infoArea.appendChild(humidityContainer);
+}
